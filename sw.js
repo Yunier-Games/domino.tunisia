@@ -1,5 +1,5 @@
 /* Domino Tunisia service worker. Change VERSION whenever you publish a new index.html so phones refresh their cache. */
-const VERSION = 'dt-v3';
+const VERSION = 'dt-v7';
 const CORE = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', (e) => {
