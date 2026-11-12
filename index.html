@@ -510,6 +510,12 @@
   .profchip { position: absolute; z-index: 3; top: max(14px, env(safe-area-inset-top, 0px)); left: max(14px, env(safe-area-inset-left, 0px)); width: 44px; height: 44px; border-radius: 12px; border: 2px solid var(--gold-2); background: linear-gradient(160deg, #5b2bb0, #2a0f4f); color: var(--gold-1); cursor: pointer; display: grid; place-items: center; box-shadow: 0 3px 8px #000a; }
   .profchip b { font-family: var(--font-display); font-size: 24px; font-weight: 900; }
   .menu-in.wide { width: min(100%, 440px); }
+  .bigcode { direction: ltr; font-size: 42px; letter-spacing: 8px; font-weight: 900; color: var(--gold-1); margin: 4px 0 8px; font-family: var(--font-display); }
+  .onin { width: 100%; box-sizing: border-box; text-align: center; font-size: 24px; letter-spacing: 6px; text-transform: uppercase; padding: 10px; border-radius: 10px; border: 1px solid var(--gold-3); background: #0008; color: var(--text); direction: ltr; }
+  .onwarn { font-size: 13px; color: #ffb4a0; margin-top: 8px; line-height: 1.5; }
+  .onor { margin: 10px 0 4px; color: var(--muted); font-size: 14px; }
+  .fcard .av img { width: 100%; height: 100%; border-radius: inherit; object-fit: cover; }
+  .tcard small { display: block; color: var(--muted); margin-top: 6px; font-size: 13px; }
   .room { flex: none; position: relative; overflow: hidden; border: 2px solid var(--rc); padding-top: 150px; }
   .room > *:not(.rscene) { position: relative; z-index: 1; }
   .rscene { position: absolute; inset: 0 0 auto 0; height: 230px; z-index: 0; pointer-events: none; }
@@ -685,6 +691,11 @@
     <div class="invbar"><span data-i="fr_bar"></span>
       <div><button class="mbtn primary small" id="frInvite" type="button" data-i="fr_invite"></button><button class="mbtn small soonc" type="button" data-i="fr_addid"></button></div></div>
     <button class="mbtn" id="frBack" type="button" data-i="back" style="justify-content:center"></button>
+  </div>
+  <div class="menu-in wide" id="scrOnline" hidden>
+    <h2 class="scr-title" data-i="on_title"></h2>
+    <div id="onBody"></div>
+    <button class="mbtn" id="onBack" type="button" data-i="back" style="justify-content:center"></button>
   </div>
   <div class="menu-in wide" id="scrRandom" hidden>
     <h2 class="scr-title" data-i="rm_title"></h2>
@@ -1046,6 +1057,14 @@
       cn_title: 'Scegli il tuo paese', cn_note: 'Una sola volta, non modificabile.', pf_locked: 'Il paese non si può cambiare' }
   };
   Object.keys(C6).forEach(function (l) { Object.keys(C6[l]).forEach(function (k) { D[l][k] = C6[l][k]; }); });
+  var C7 = {
+    tn: { on_title: 'اللعب أونلاين', on_hello: 'ادخل بحساب Google باش تلعب مع صحابك', on_signin: 'دخول بـ Google', on_tip: 'افتح اللعبة من Chrome أو من التطبيق المثبّت. من متصفح تيليغرام أو فيسبوك، Google ما تخليكش تدخل.', on_inapp: 'انت فاتح اللعبة من داخل تطبيق (تيليغرام/فيسبوك…). افتح الرابط في Chrome باش يخدم الدخول.', on_signed: 'مسجّل بحساب Google', on_signout: 'خروج', on_create: 'اعمل غرفة', on_or: 'ولا', on_join: 'ادخل', on_ph: 'كود الغرفة', on_code: 'كود الغرفة', on_wait: 'نستنّاو صاحبك يدخل…', on_share: 'شارك', on_cancel: 'إلغاء', on_loading: 'نحمّل…', on_err: 'ما نجّمناش نتّصلو بالإنترنت. جرّب مرّة أخرى.', on_retry: 'عاود', on_notfound: 'الكود هذا ما لقيناهش', on_full: 'الغرفة ممتلئة', on_left: 'صاحبك خرج', on_left2: 'الماتش وقف.', on_started: 'صاحبك دخل! نبداو', on_desync: 'صار خطأ في المزامنة، الماتش وقف.', on_share_text: function (c) { return 'تعال العب دومينو معايا! كود الغرفة: ' + c; } },
+    ar: { on_title: 'اللعب أونلاين', on_hello: 'سجّل الدخول بحساب Google لتلعب مع أصدقائك', on_signin: 'الدخول بـ Google', on_tip: 'افتح اللعبة من Chrome أو من التطبيق المثبّت. من متصفح تيليغرام أو فيسبوك لا تسمح Google بالدخول.', on_inapp: 'أنت تفتح اللعبة من داخل تطبيق (تيليغرام/فيسبوك…). افتح الرابط في Chrome ليعمل الدخول.', on_signed: 'مسجّل بحساب Google', on_signout: 'خروج', on_create: 'أنشئ غرفة', on_or: 'أو', on_join: 'ادخل', on_ph: 'كود الغرفة', on_code: 'كود الغرفة', on_wait: 'ننتظر دخول صديقك…', on_share: 'شارك', on_cancel: 'إلغاء', on_loading: 'جارٍ التحميل…', on_err: 'تعذّر الاتصال بالإنترنت. حاول مرة أخرى.', on_retry: 'أعد المحاولة', on_notfound: 'لم نجد هذا الكود', on_full: 'الغرفة ممتلئة', on_left: 'خرج صديقك', on_left2: 'توقفت المباراة.', on_started: 'دخل صديقك! نبدأ', on_desync: 'حدث خطأ في المزامنة، توقفت المباراة.', on_share_text: function (c) { return 'تعال العب دومينو معي! كود الغرفة: ' + c; } },
+    fr: { on_title: 'Jouer en ligne', on_hello: 'Connecte-toi avec Google pour jouer avec tes amis', on_signin: 'Se connecter avec Google', on_tip: 'Ouvre le jeu dans Chrome ou dans l\'appli installée. Google refuse la connexion dans le navigateur de Telegram ou Facebook.', on_inapp: 'Tu ouvres le jeu dans une appli (Telegram/Facebook…). Ouvre le lien dans Chrome pour pouvoir te connecter.', on_signed: 'Connecté avec Google', on_signout: 'Déconnexion', on_create: 'Créer un salon', on_or: 'ou', on_join: 'Entrer', on_ph: 'Code du salon', on_code: 'Code du salon', on_wait: 'On attend ton ami…', on_share: 'Partager', on_cancel: 'Annuler', on_loading: 'Chargement…', on_err: 'Connexion impossible. Réessaie.', on_retry: 'Réessayer', on_notfound: 'Code introuvable', on_full: 'Salon complet', on_left: 'Ton ami est parti', on_left2: 'La partie est arrêtée.', on_started: 'Ton ami est là ! On commence', on_desync: 'Erreur de synchronisation, partie arrêtée.', on_share_text: function (c) { return 'Viens jouer au domino avec moi ! Code du salon : ' + c; } },
+    en: { on_title: 'Play online', on_hello: 'Sign in with Google to play with your friends', on_signin: 'Sign in with Google', on_tip: 'Open the game in Chrome or the installed app. Google blocks sign-in inside the Telegram or Facebook browser.', on_inapp: 'You opened the game inside an app (Telegram/Facebook…). Open the link in Chrome so sign-in works.', on_signed: 'Signed in with Google', on_signout: 'Sign out', on_create: 'Create a room', on_or: 'or', on_join: 'Join', on_ph: 'Room code', on_code: 'Room code', on_wait: 'Waiting for your friend…', on_share: 'Share', on_cancel: 'Cancel', on_loading: 'Loading…', on_err: 'Could not connect. Try again.', on_retry: 'Retry', on_notfound: 'Code not found', on_full: 'Room is full', on_left: 'Your friend left', on_left2: 'The match stopped.', on_started: 'Your friend is in! Starting', on_desync: 'Sync error, the match stopped.', on_share_text: function (c) { return 'Come play dominoes with me! Room code: ' + c; } },
+    it: { on_title: 'Gioca online', on_hello: 'Accedi con Google per giocare con gli amici', on_signin: 'Accedi con Google', on_tip: 'Apri il gioco in Chrome o nell\'app installata. Google blocca l\'accesso nel browser di Telegram o Facebook.', on_inapp: 'Stai aprendo il gioco dentro un\'app (Telegram/Facebook…). Apri il link in Chrome per accedere.', on_signed: 'Accesso con Google', on_signout: 'Esci', on_create: 'Crea una stanza', on_or: 'oppure', on_join: 'Entra', on_ph: 'Codice stanza', on_code: 'Codice stanza', on_wait: 'Aspettiamo il tuo amico…', on_share: 'Condividi', on_cancel: 'Annulla', on_loading: 'Caricamento…', on_err: 'Connessione impossibile. Riprova.', on_retry: 'Riprova', on_notfound: 'Codice non trovato', on_full: 'Stanza piena', on_left: 'Il tuo amico è uscito', on_left2: 'La partita si è fermata.', on_started: 'Il tuo amico è entrato! Si comincia', on_desync: 'Errore di sincronizzazione, partita fermata.', on_share_text: function (c) { return 'Vieni a giocare a domino con me! Codice stanza: ' + c; } }
+  };
+  Object.keys(C7).forEach(function (l) { Object.keys(C7[l]).forEach(function (k) { D[l][k] = C7[l][k]; }); });
   Object.keys(C2).forEach(function (l) { Object.keys(C2[l]).forEach(function (k) { D[l][k] = C2[l][k]; }); });
   var C3 = {
     tn: { voice_test: '🔊 جرّب الصوت', voice_none: 'تلفونك ما عندوش صوت عربي. إدخل: الإعدادات ← الإدارة العامة ← اللغة ← تحويل النص إلى كلام ← نزّل العربية. وإلا سجّل الصوت بنفسك في voices/vA_tn.mp3', voice_nosupport: 'المتصفح هذا ما يدعمش القراءة الصوتية', voice_ok: 'الصوت خدام ✔' },
@@ -1186,10 +1205,11 @@
   var $ = function (s) { return document.querySelector(s); };
   var M = null; /* match: { mode, gameNo, wins:{A,B}, pts:{A,B}, target, done } */
   var S = null; /* current hand */
+  var ON = null; /* online match (null = playing the bot) */
 
   function teamOf(p) { return (p === 'me' || p === 't') ? 'A' : 'B'; }
   function allTiles() { var a = []; for (var i = 0; i <= 6; i++) for (var j = i; j <= 6; j++) a.push([i, j]); return a; }
-  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var x = a[i]; a[i] = a[j]; a[j] = x; } return a; }
+  function shuffle(a, rnd) { var R = rnd || Math.random; for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(R() * (i + 1)); var x = a[i]; a[i] = a[j]; a[j] = x; } return a; }
   function pips(h) { return h.reduce(function (s, x) { return s + x[0] + x[1]; }, 0); }
   function ends() { return S.chain.length ? [S.chain[0][0], S.chain[S.chain.length - 1][1]] : null; }
   function fits(x, e) {
@@ -1212,13 +1232,13 @@
   function newEnd(x, side, e) { return side === 'R' ? (x[0] === e[1] ? x[1] : x[0]) : (x[1] === e[0] ? x[0] : x[1]); }
   function seatName(p) {
     if (p === 'me') return t('you');
-    if (p === 'b') return t('bot');
+    if (p === 'b') return (ON && ON.oppName) || t('bot');
     if (p === 't') return t('partner');
     return t('opp') + (p === 'r' ? ' 1' : ' 2');
   }
   function teamLabel(team) {
     var two = M && M.mode === '2v2';
-    return team === 'A' ? (two ? t('us') : t('you')) : (two ? t('them') : t('bot'));
+    return team === 'A' ? (two ? t('us') : t('you')) : (two ? t('them') : ((ON && ON.oppName) || t('bot')));
   }
 
   /* ---------- Tile drawing ---------- */
@@ -1456,10 +1476,10 @@
 
   function startHand() {
     hideTip(); stopTimer();
-    var deck = shuffle(allTiles()), order = ORDERS[M.mode].slice();
+    var deck = shuffle(allTiles(), ON ? rng(ON.seed + 7919 * (++ON.hn)) : null), order = ORDERS[M.mode].slice();
     var cur = S = { order: order, hands: {}, bone: [], chain: [], turn: null, sel: null, over: false, busy: false, last: null, center: null, miss: {}, anim: true, drew: false, dealing: true, paused: false, queue: [], count: 0, bub: {}, lastMover: null, locking: false };
     var per = order.length === 4 ? 7 : 7;
-    order.forEach(function (p, i) { cur.hands[p] = deck.slice(i * per, (i + 1) * per); cur.miss[p] = {}; });
+    order.forEach(function (p, i) { var ix = (ON && ON.seat === 1) ? 1 - i : i; cur.hands[p] = deck.slice(ix * per, (ix + 1) * per); cur.miss[p] = {}; });
     cur.bone = deck.slice(order.length * per);
     $('#overlay').hidden = true;
     render();
@@ -1467,8 +1487,8 @@
   }
 
   function finishDeal(cur) {
-    var best = null, who = null;
-    cur.order.forEach(function (p) {
+    var best = null, who = null, ord = cur.order.slice(); if (ON && ON.seat === 1) ord.reverse();
+    ord.forEach(function (p) {
       cur.hands[p].forEach(function (x) {
         var key = (x[0] === x[1] ? 100 : 0) + x[0] + x[1];
         if (!best || key > best.key) { best = { key: key, x: x }; who = p; }
@@ -1489,6 +1509,7 @@
   }
 
   function doPlay(who, x, side) {
+    if (ON && who === 'me') ONsend({ t: 'p', x: [x[0], x[1]], d: side });
     S.hands[who].splice(S.hands[who].indexOf(x), 1);
     S.sel = null;
     hideTip();
@@ -1534,8 +1555,8 @@
   function playerDraw() {
     if (!S || S.dealing || S.turn !== 'me' || S.busy || S.over || canPlay(S.hands.me)) return;
     markMiss('me');
-    if (S.bone.length) { S.hands.me.push(S.bone.pop()); S.drew = true; sfx('pass'); render(); }
-    else { toast(t('youPassed')); sfx('pass'); nextTurn('me'); }
+    if (S.bone.length) { ONsend({ t: 'd' }); S.hands.me.push(S.bone.pop()); S.drew = true; sfx('pass'); render(); }
+    else { ONsend({ t: 'x' }); toast(t('youPassed')); sfx('pass'); nextTurn('me'); }
   }
 
   function botChoose(p) {
@@ -1561,6 +1582,7 @@
     var cur = S;
     cur.busy = true;
     render();
+    if (ON) { onPump(); return; }
     function step() {
       if (S !== cur || cur.over) return;
       var mv = botChoose(p);
@@ -1596,7 +1618,7 @@
     if (wt) text += (text ? ' · ' : '') + teamLabel(wt) + ': +' + pts;
     if (gameOver && !matchOver && M.gameNo === 2) text += ' · ' + t('ajinNote');
     if (matchOver) {
-      var rw = wt === 'A' ? 50 + Math.floor(Math.random() * 51) : (Math.random() < 0.25 ? 10 + Math.floor(Math.random() * 21) : 0);
+      var rw = ON ? 0 : wt === 'A' ? 50 + Math.floor(Math.random() * 51) : (Math.random() < 0.25 ? 10 + Math.floor(Math.random() * 21) : 0);
       if (rw) { ecoAdd(rw); text += ' · ' + t('reward_match', rw); }
       eco.prof.games++; if (wt === 'A') { eco.prof.wins++; eco.prof.streak++; if (eco.prof.streak > eco.prof.best) eco.prof.best = eco.prof.streak; } else { eco.prof.streak = 0; }
       saveEco();
@@ -1616,7 +1638,7 @@
     if (matchOver) {
       M.done = true;
       btn.textContent = t('newMatch'); btn.onclick = function () { startMatch(M.mode); };
-      btn2.hidden = false; btn2.textContent = t('toMenu'); btn2.onclick = function () { $('#overlay').hidden = true; showMenu(); };
+      btn2.hidden = false; btn2.textContent = t('toMenu'); btn2.onclick = function () { ONleave(); $('#overlay').hidden = true; showMenu(); };
     } else if (gameOver) {
       btn.textContent = t('nextGame');
       btn.onclick = function () { M.said = false; M.gameNo++; M.pts = { A: 0, B: 0 }; M.target = M.gameNo === 3 ? 150 : 101; startHand(); };
@@ -1794,6 +1816,7 @@
     text = String(text || '').trim(); if (!text || !S || !M) return;
     $('#cIn').value = '';
     addLog('me', text); bubble('me', text); sfx('chat');
+    if (ON) { try { ON.ref.child('ch').push({ s: ON.seat, txt: text.slice(0, 120) }); } catch (e) {} return; }
     if (!snd.chat) { addLog('_', t('chat_muted')); return; }
     var k = classify(text), cur = S, two = M.mode === '2v2', R = REP[lang], who;
     if (!two) who = ['b'];
@@ -1905,10 +1928,12 @@
     $('#lkBtns').hidden = !mine;
     $('#lock').hidden = false;
     function pickLock(kind) { if (S !== cur || cur.over) return; $('#lock').hidden = true; endHand(null, true, kind); }
+    cur.lockPick = pickLock;
     if (mine) {
-      $('#lkBlind').onclick = function () { pickLock('blind'); };
-      $('#lkAware').onclick = function () { pickLock('aware'); };
+      $('#lkBlind').onclick = function () { ONsend({ t: 'l', k: 'blind' }); pickLock('blind'); };
+      $('#lkAware').onclick = function () { ONsend({ t: 'l', k: 'aware' }); pickLock('aware'); };
     } else {
+      if (ON) { onPump(); return; }
       later(cur, function () {
         if (S !== cur || cur.over) return;
         var k = botLockChoice(who);
@@ -1953,8 +1978,8 @@
       if (S !== cur || cur.over) return;
       var mv = botChoose('me');
       if (mv) doPlay('me', mv.x, mv.side);
-      else if (cur.bone.length) { markMiss('me'); cur.hands.me.push(cur.bone.pop()); cur.drew = true; sfx('pass'); render(); later(cur, step, 500); }
-      else { markMiss('me'); toast(t('youPassed')); sfx('pass'); nextTurn('me'); }
+      else if (cur.bone.length) { markMiss('me'); ONsend({ t: 'd' }); cur.hands.me.push(cur.bone.pop()); cur.drew = true; sfx('pass'); render(); later(cur, step, 500); }
+      else { markMiss('me'); ONsend({ t: 'x' }); toast(t('youPassed')); sfx('pass'); nextTurn('me'); }
     })();
   }
   function pauseGame() {
@@ -1974,11 +1999,13 @@
   }
   function openPause() {
     if (!S || !M || M.done) return;
-    pauseGame(); closeChat();
+    if (!ON) pauseGame();
+    closeChat();
     $('#pConfirm').hidden = true; $('#pQuit').hidden = false;
     $('#pause').hidden = false;
   }
   function quitMatch() {
+    ONleave();
     M.done = true; S.over = true; S.paused = false; stopTimer(); hideTip();
     $('#pause').hidden = true; $('#overlay').hidden = true; $('#lock').hidden = true; $('#slam').hidden = true; closeChat();
     var n = $('#menuNote'); n.textContent = t('quitNote'); n.hidden = false;
@@ -2140,7 +2167,7 @@
     $('#langs').innerHTML = LANGS.map(function (l) { return '<button class="chip" type="button" data-l="' + l[0] + '" aria-pressed="false">' + l[1] + '</button>'; }).join('');
     $('#logoTiles').innerHTML = tileHTML([6, 6], 'v', '') + tileHTML([6, 3], 'v', '') + tileHTML([3, 0], 'v', '');
   }
-  var SCREENS = ['scrMain', 'scrMode', 'scrShop', 'scrWheel', 'scrFriends', 'scrRandom', 'scrProfile'];
+  var SCREENS = ['scrMain', 'scrMode', 'scrShop', 'scrWheel', 'scrFriends', 'scrRandom', 'scrProfile', 'scrOnline'];
   function screen(id) {
     SCREENS.forEach(function (k) { $('#' + k).hidden = k !== id; });
     $('#menu').classList.toggle('home', id === 'scrMain');
@@ -2290,7 +2317,7 @@
     document.querySelectorAll('#frTabs .tabbtn').forEach(function (b) { b.setAttribute('aria-pressed', +b.getAttribute('data-tab') === frTab ? 'true' : 'false'); });
     var h = '';
     if (frTab === 0) {
-      h = '<div class="tcard"><h3>' + t('fr_t_title') + '</h3><button class="mbtn soonc" type="button">' + t('fr_create') + '</button><button class="mbtn soonc" type="button">' + t('fr_join') + '</button></div>' +
+      h = '<div class="tcard"><h3>' + t('fr_t_title') + '</h3><button class="mbtn" type="button" data-on="1">' + t('fr_create') + '</button><button class="mbtn" type="button" data-on="1">' + t('fr_join') + '</button></div>' +
         '<div class="fcard empty"><div class="av">+</div><div class="inf"><b>' + t('fr_slot') + '</b>' + t('fr_slot2') + '</div><button class="gbtn" type="button" data-share="1">' + t('fr_invite') + '</button></div>' +
         '<div class="fcard empty"><div class="av">+</div><div class="inf"><b>' + t('fr_slot') + '</b>' + t('fr_empty') + '</div><button class="gbtn soonc" type="button" style="filter:grayscale(.8)">' + t('challenge') + '</button></div>';
     } else h = '<div class="emptybox">' + t(frTab === 1 ? 'fr_sug_empty' : 'fr_act_empty') + '</div>';
@@ -2428,7 +2455,7 @@
   $('#profChip').addEventListener('click', function () { pfEdit = false; screen('scrProfile'); renderProfile(); });
   $('#profBack').addEventListener('click', showMenu);
   $('#frTabs').addEventListener('click', function (ev) { var b = ev.target.closest('[data-tab]'); if (!b) return; frTab = +b.getAttribute('data-tab'); renderFriends(); });
-  $('#frBody').addEventListener('click', function (ev) { if (ev.target.closest('[data-share]')) $('#frInvite').click(); });
+  $('#frBody').addEventListener('click', function (ev) { if (ev.target.closest('[data-share]')) $('#frInvite').click(); if (ev.target.closest('[data-on]')) openLobby(); });
   $('#roomList').addEventListener('click', function (ev) {
     var b = ev.target.closest('[data-room]'); if (!b) return;
     var idx = 0; ROOMS.forEach(function (x, k) { if (x.id === b.getAttribute('data-room')) idx = k; });
@@ -2491,6 +2518,206 @@
   document.addEventListener('pointerdown', unlockAudio, true);
   buildMenu();
   applySkin();
+  /* ---------- Online play with friends (Firebase: Google sign-in + Realtime Database) ----------
+     Both phones run the same game. The deal comes from a shared seed, so only the moves travel over the network. */
+  var FBCFG = { apiKey: 'AIzaSyBmUz01W5pU0NyVdcmOhDux-ywdVXrzWZI', authDomain: 'domino-tunisia.firebaseapp.com', databaseURL: 'https://domino-tunisia-default-rtdb.europe-west1.firebasedatabase.app', projectId: 'domino-tunisia', storageBucket: 'domino-tunisia.firebasestorage.app', messagingSenderId: '524648933508', appId: '1:524648933508:web:cec6efba4ec938729d7ad1' };
+  var NET = { state: 'idle', user: null, db: null, auth: null, lobby: null };
+  var pendingRoom = '';
+  try { pendingRoom = (new URLSearchParams(location.search).get('room') || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6); } catch (e) {}
+  function escH(x) { return String(x).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function rng(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; var q = Math.imul(a ^ a >>> 15, 1 | a); q = q + Math.imul(q ^ q >>> 7, 61 | q) ^ q; return ((q ^ q >>> 14) >>> 0) / 4294967296; }; }
+  function myName() { return (eco.prof.name || (NET.user && NET.user.displayName) || 'Player').slice(0, 14); }
+  function genCode() { var c = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789', r = ''; for (var i = 0; i < 6; i++) r += c.charAt(Math.floor(Math.random() * c.length)); return r; }
+  function loadScripts(list, i, ok, bad) {
+    if (i >= list.length) { ok(); return; }
+    var sc = document.createElement('script'); sc.src = list[i];
+    sc.onload = function () { loadScripts(list, i + 1, ok, bad); }; sc.onerror = function () { bad(); };
+    document.head.appendChild(sc);
+  }
+  function loadFirebase() {
+    if (NET.state === 'ready' || NET.state === 'loading') return;
+    NET.state = 'loading'; renderLobby();
+    function ready() {
+      try {
+        if (!firebase.apps.length) firebase.initializeApp(FBCFG);
+        NET.db = firebase.database(); NET.auth = firebase.auth(); NET.state = 'ready';
+        NET.auth.onAuthStateChanged(function (u) {
+          NET.user = u; renderLobby();
+          if (u && pendingRoom) { var c = pendingRoom; pendingRoom = ''; joinRoom(c); }
+        });
+      } catch (e) { NET.state = 'error'; }
+      renderLobby();
+    }
+    if (window.firebase && firebase.database && firebase.auth) { ready(); return; }
+    var names = ['firebase-app-compat.js', 'firebase-auth-compat.js', 'firebase-database-compat.js'];
+    var bases = ['https://www.gstatic.com/firebasejs/10.12.2/', 'https://cdn.jsdelivr.net/npm/firebase@10.12.2/'];
+    (function tryBase(k) {
+      if (k >= bases.length) { NET.state = 'error'; renderLobby(); return; }
+      loadScripts(names.map(function (n) { return bases[k] + n; }), 0, ready, function () { tryBase(k + 1); });
+    })(0);
+  }
+  function openLobby() { screen('scrOnline'); if (NET.state === 'idle' || NET.state === 'error') { NET.state = 'idle'; loadFirebase(); } renderLobby(); }
+  function renderLobby() {
+    var b = $('#onBody'); if (!b || $('#scrOnline').hidden) return;
+    var h = '';
+    var inapp = /Telegram|FBAN|FBAV|Instagram|; wv\)/i.test(navigator.userAgent || '');
+    if (NET.state === 'loading' || NET.state === 'idle') h = '<div class="emptybox">' + t('on_loading') + '</div>';
+    else if (NET.state === 'error') h = '<div class="emptybox">' + t('on_err') + '</div><button class="mbtn primary" id="onRetry" type="button" style="justify-content:center">' + t('on_retry') + '</button>';
+    else if (!NET.user) h = '<div class="tcard"><h3>' + t('on_hello') + '</h3><button class="mbtn primary" id="onSign" type="button">G&nbsp; ' + t('on_signin') + '</button>' + (inapp ? '<div class="onwarn">' + t('on_inapp') + '</div>' : '<small>' + t('on_tip') + '</small>') + '</div>';
+    else {
+      var nm = escH(myName());
+      h = '<div class="fcard"><div class="av">' + (NET.user.photoURL ? '<img alt="" src="' + escH(NET.user.photoURL) + '">' : escH(nm.charAt(0).toUpperCase())) + '</div><div class="inf"><b>' + nm + '</b>' + t('on_signed') + '</div><button class="gbtn" id="onOut" type="button">' + t('on_signout') + '</button></div>';
+      if (NET.lobby) h += '<div class="tcard"><h3>' + t('on_code') + '</h3><div class="bigcode">' + NET.lobby.code + '</div><small>' + t('on_wait') + '</small><button class="mbtn primary" id="onShare" type="button">' + t('on_share') + '</button><button class="mbtn" id="onCancel" type="button">' + t('on_cancel') + '</button></div>';
+      else h += '<div class="tcard"><button class="mbtn primary" id="onCreate" type="button">' + t('on_create') + '</button><div class="onor">' + t('on_or') + '</div><input class="onin" id="onCode" maxlength="6" autocomplete="off" autocapitalize="characters" placeholder="' + t('on_ph') + '"><button class="mbtn" id="onJoin" type="button">' + t('on_join') + '</button></div>';
+    }
+    b.innerHTML = h;
+  }
+  function signIn() {
+    var prov = new firebase.auth.GoogleAuthProvider();
+    NET.auth.signInWithPopup(prov).catch(function (e) {
+      if (e && (e.code === 'auth/popup-blocked' || e.code === 'auth/operation-not-supported-in-this-environment')) NET.auth.signInWithRedirect(prov);
+      else if (!(e && (e.code === 'auth/popup-closed-by-user' || e.code === 'auth/cancelled-popup-request'))) shopNote(t('on_err'));
+    });
+  }
+  function createRoom() {
+    if (!NET.user || NET.lobby || ON) return;
+    var code = genCode(), ref = NET.db.ref('rooms/' + code);
+    ref.once('value').then(function (sn) {
+      if (sn.exists()) { createRoom(); return null; }
+      return ref.set({ host: NET.user.uid, hn: myName(), st: 'wait', seed: 1 + Math.floor(Math.random() * 2147483000), t: Date.now() }).then(function () { enterRoom(code, 0); });
+    }).catch(function () { shopNote(t('on_err')); });
+  }
+  function joinRoom(code) {
+    code = String(code || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6);
+    if (code.length < 6 || !NET.user || NET.lobby || ON) return;
+    var ref = NET.db.ref('rooms/' + code), me = NET.user.uid;
+    ref.once('value').then(function (sn) {
+      var v = sn.val();
+      if (!v) { shopNote(t('on_notfound')); return null; }
+      if (v.host === me || (v.guest && v.guest !== me)) { shopNote(t('on_full')); return null; }
+      return ref.child('guest').transaction(function (cur) { if (cur === null || cur === me) return me; return undefined; }).then(function (r) {
+        if (!r.committed) { shopNote(t('on_full')); return null; }
+        return ref.update({ gn: myName(), st: 'play' }).then(function () { enterRoom(code, 1); });
+      });
+    }).catch(function () { shopNote(t('on_err')); });
+  }
+  function enterRoom(code, seat) {
+    var ref = NET.db.ref('rooms/' + code), me = NET.user.uid;
+    ON = { code: code, seat: seat, ref: ref, uid: me, hn: 0, q: {}, started: false, applying: false, seenOpp: false, left: false, oppName: '', seed: 0 };
+    NET.lobby = { code: code };
+    ref.child('pr/' + me).set(true); ref.child('pr/' + me).onDisconnect().remove();
+    ref.child('mv').on('child_added', onMoveSnap);
+    ref.child('ch').on('child_added', onChatSnap);
+    ref.child('pr').on('value', onPres);
+    ref.on('value', onRoomVal);
+    renderLobby();
+  }
+  function ONleave() {
+    if (!ON) return;
+    var o = ON; ON = null; NET.lobby = null;
+    try {
+      o.ref.child('mv').off(); o.ref.child('ch').off(); o.ref.child('pr').off(); o.ref.off();
+      o.ref.child('pr/' + o.uid).remove();
+      if (!o.started || o.left) o.ref.remove();
+    } catch (e) {}
+  }
+  function ONsend(mv) {
+    if (!ON) return;
+    mv.s = ON.seat; mv.h = ON.hn;
+    try { ON.ref.child('mv').push(mv); } catch (e) {}
+  }
+  function onRoomVal(sn) {
+    if (!ON) return;
+    var v = sn.val();
+    if (!v) { if (ON.started && !ON.left) endOnline(t('on_left'), t('on_left2')); return; }
+    if (v.st === 'play' && !ON.started) {
+      ON.started = true; ON.seed = v.seed; ON.oppName = (ON.seat === 0 ? v.gn : v.hn) || '';
+      shopNote(t('on_started'));
+      $('#menu').hidden = true; startMatch('1v1');
+    }
+  }
+  function onPres(sn) {
+    if (!ON) return;
+    var n = Object.keys(sn.val() || {}).length;
+    if (n >= 2) ON.seenOpp = true;
+    else if (ON.seenOpp && ON.started && !ON.left) endOnline(t('on_left'), t('on_left2'));
+  }
+  function onMoveSnap(sn) {
+    var v = sn.val(); if (!ON || !v || v.s === ON.seat) return;
+    (ON.q[v.h] = ON.q[v.h] || []).push(v);
+    onPump();
+  }
+  function onChatSnap(sn) {
+    var v = sn.val(); if (!ON || !v || v.s === ON.seat || !S || !M) return;
+    botSay('b', String(v.txt || '').slice(0, 120));
+  }
+  function endOnline(title, text) {
+    if (!ON || ON.left) return;
+    ON.left = true;
+    if (!S || !M) return;
+    M.done = true; S.over = true; stopTimer(); hideTip();
+    $('#lock').hidden = true; $('#slam').hidden = true; $('#pause').hidden = true; closeChat();
+    $('#ovTitle').textContent = title; $('#ovText').textContent = text; $('#ovTally').textContent = ''; $('#ovGames').textContent = ''; $('#ovReveal').innerHTML = '';
+    var btn = $('#ovBtn'); $('#ovBtn2').hidden = true;
+    btn.textContent = t('toMenu'); btn.onclick = function () { ONleave(); $('#overlay').hidden = true; showMenu(); };
+    $('#overlay').hidden = false;
+  }
+  /* The opponent's moves are replayed here, one at a time, when it is their turn. */
+  function onPump() {
+    if (!ON || !S || !M || S.over || S.dealing || ON.applying) return;
+    var q = ON.q[ON.hn]; if (!q || !q.length) return;
+    var mv = q[0], cur = S;
+    if (cur.locking) {
+      if (cur.lockTeam === 'B' && mv.t === 'l' && cur.lockPick) {
+        q.shift(); ON.applying = true;
+        $('#lkSub').textContent = t(mv.k === 'blind' ? 'lock_blind_by' : 'lock_aware_by', seatName('b'));
+        later(cur, function () { ON.applying = false; if (S === cur && !cur.over) cur.lockPick(mv.k); }, 1500);
+      }
+      return;
+    }
+    if (cur.turn !== 'b') return;
+    q.shift(); ON.applying = true;
+    later(cur, function () {
+      if (!ON) return;
+      ON.applying = false;
+      if (S !== cur || cur.over) return;
+      if (mv.t === 'p') {
+        var x = cur.hands.b.filter(function (y) { return (y[0] === mv.x[0] && y[1] === mv.x[1]) || (y[0] === mv.x[1] && y[1] === mv.x[0]); })[0];
+        if (!x) { endOnline(t('on_left'), t('on_desync')); return; }
+        doPlay('b', x, mv.d);
+      } else if (mv.t === 'd') {
+        markMiss('b'); if (cur.bone.length) cur.hands.b.push(cur.bone.pop());
+        toast(t('drew', seatName('b'))); sfx('pass'); render(); onPump();
+      } else if (mv.t === 'x') {
+        markMiss('b'); toast(t('passed', seatName('b'))); sfx('pass'); nextTurn('b');
+      }
+    }, 700);
+  }
+  $('#onBody').addEventListener('click', function (ev) {
+    var id = (ev.target.closest('button') || {}).id;
+    if (id === 'onSign') signIn();
+    else if (id === 'onOut') { NET.auth.signOut(); }
+    else if (id === 'onRetry') { NET.state = 'idle'; loadFirebase(); }
+    else if (id === 'onCreate') createRoom();
+    else if (id === 'onJoin') joinRoom($('#onCode').value);
+    else if (id === 'onCancel') { ONleave(); renderLobby(); }
+    else if (id === 'onShare') {
+      var code = NET.lobby && NET.lobby.code; if (!code) return;
+      var url = location.origin + location.pathname + '?room=' + code, txt = t('on_share_text', code);
+      if (navigator.share) navigator.share({ title: 'Domino Tunisia', text: txt, url: url }).catch(function () {});
+      else if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt + ' ' + url).then(function () { shopNote(t('copied')); }, function () {});
+    }
+  });
+  $('#onBack').addEventListener('click', function () { ONleave(); screen('scrFriends'); renderFriends(); });
+  if (window.__DTTEST) window.__DT = {
+    st: function () { return { S: S, M: M, ON: ON }; },
+    auto: function () {
+      if (!S || S.over || S.dealing || S.turn !== 'me' || S.busy) return 'wait';
+      var e = ends(), x = S.hands.me.filter(function (y) { return fits(y, e).length; })[0];
+      if (x) { doPlay('me', x, fits(x, e)[0]); return 'play'; }
+      playerDraw(); return 'draw';
+    }
+  };
   applyLang();
   function showCnPick() {
     if (eco.prof.cl) return;
@@ -2503,6 +2730,7 @@
   });
   showMenu();
   showCnPick();
+  if (pendingRoom) openLobby();
   setTimeout(function () { var sp = $('#splash'); sp.classList.add('out'); setTimeout(function () { sp.style.display = 'none'; }, 600); }, 2400);
 })();
 </script>
